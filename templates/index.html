@@ -10,10 +10,14 @@
 <div id="recording-status"></div>
 <button id="record-button">Start Recording</button>
 {% for note in notes %}
-    <div>
-        {{ note }}
-    </div>
+<div>
+    {{ note }}
+</div>
+<br>
 {% endfor %}
+<div>
+    Summary: {{ summary }}
+</div>
 <script>
     var recording = false;
     var chunks = [];
