@@ -1,3 +1,5 @@
+import glob
+
 from flask import Flask, render_template, request
 import datetime as dt
 import whisper
@@ -19,7 +21,11 @@ def transcribe(filename):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    notes = []
+    for file in sorted(glob.glob(str(output_directory / "*.txt"))):
+        with open(file) as f:
+            notes.append(f.read())
+    return render_template('index.html', notes=notes)
 
 
 @app.route('/upload', methods=['POST'])

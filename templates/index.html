@@ -9,6 +9,11 @@
 <h1>Voice Notes</h1>
 <div id="recording-status"></div>
 <button id="record-button">Start Recording</button>
+{% for note in notes %}
+    <div>
+        {{ note }}
+    </div>
+{% endfor %}
 <script>
     var recording = false;
     var chunks = [];
