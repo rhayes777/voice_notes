@@ -3,3 +3,8 @@ recordings
 .envr
 .idea/
 TODO
+*.m4a.json
+*.m4a.srt
+*.m4a.tsv
+*.m4a.txt
+*.m4a.vtt
