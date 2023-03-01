@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Record Voice Notes</title>
+</head>
+<body>
+    <h1>Record Voice Notes</h1>
+    <button onclick="record()">Record</button>
+    <script>
+        function record() {
+            fetch('/record')
+                .then(response => response.text())
+                .then(result => {
+                    console.log(result);
+                });
+        }
+    </script>
+</body>
+</html>
