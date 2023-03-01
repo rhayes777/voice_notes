@@ -1,20 +1,67 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Record Voice Notes</title>
+    <title>Voice Notes</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>Record Voice Notes</h1>
-    <button onclick="record()">Record</button>
-    <script>
-        function record() {
-            fetch('/record')
-                .then(response => response.text())
-                .then(result => {
-                    console.log(result);
-                });
+<h1>Voice Notes</h1>
+<div id="recording-status"></div>
+<button id="record-button">Start Recording</button>
+<script>
+    var recording = false;
+    var chunks = [];
+
+    var recordButton = document.getElementById('record-button');
+    var recordingStatus = document.getElementById('recording-status');
+
+    var mediaRecorder;
+
+    recordButton.addEventListener('click', function () {
+        if (!recording) {
+            recording = true;
+            startRecording();
+            recordButton.innerHTML = 'Stop Recording';
+            recordingStatus.innerHTML = 'Recording...';
+        } else {
+            recording = false;
+            stopRecording();
+            recordButton.innerHTML = 'Start Recording';
+            recordingStatus.innerHTML = '';
         }
-    </script>
+    });
+
+    function startRecording() {
+        navigator.mediaDevices.getUserMedia({audio: true})
+            .then(function (stream) {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+                console.log(mediaRecorder.state);
+
+                mediaRecorder.ondataavailable = function (e) {
+                    chunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = function () {
+                    var blob = new Blob(chunks, {'type': 'audio/ogg; codecs=opus'});
+                    chunks = [];
+                    var formData = new FormData();
+                    formData.append('audio', blob);
+                    $.ajax({
+                        type: 'POST',
+                        url: '/upload',
+                        data: formData,
+                        processData: false,
+                        contentType: false
+                    });
+                };
+            });
+    }
+
+    function stopRecording() {
+        mediaRecorder.stop();
+    }
+</script>
 </body>
 </html>
